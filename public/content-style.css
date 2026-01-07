@@ -1,0 +1,36 @@
+.pob-copy-btn {
+  appearance: none;
+  border: 1px solid #6a6a6a;
+  border-radius: 2px;
+  background: #222;
+  color: #e6e6e6;
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 6px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.pob-copy-btn:hover {
+  background: #2f2f2f;
+}
+
+.pob-copy-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.pob-copy-btn--below-verified {
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.pob-copy-btn[data-status="ok"] {
+  border-color: #5aa85a;
+  color: #b8e3b8;
+}
+
+.pob-copy-btn[data-status="error"] {
+  border-color: #b76a6a;
+  color: #f2c0c0;
+}

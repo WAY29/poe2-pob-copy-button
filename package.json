@@ -1,0 +1,16 @@
+{
+  "name": "poe2-pob-copy-button",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "vite build --mode content && vite build --mode background && vite build --mode page-hook",
+    "icons": "node scripts/render_icons.mjs",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "prettier": "^3.3.3",
+    "vite": "^5.4.0"
+  }
+}
