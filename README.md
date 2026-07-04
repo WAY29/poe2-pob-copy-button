@@ -1,6 +1,6 @@
 # PoE2 PoB Copy Button
 
-[日本語](README.ja.md)
+[日本語](README.ja.md) | [简体中文](README.zh.md)
 
 ## Overview
 
