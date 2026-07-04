@@ -5,11 +5,8 @@
     try {
       if (!url || typeof url !== "string") return;
       if (!url.includes("/api/trade2/fetch/")) return;
-      console.log("[PoB-Copy page-hook] intercepted fetch:", url, "body length:", body ? body.length : 0);
       window.postMessage({ source: MESSAGE_SOURCE, url, body }, "*");
-    } catch (e) {
-      console.error("[PoB-Copy page-hook] emit error:", e);
-    }
+    } catch (e) {}
   };
 
   const origFetch = window.fetch;

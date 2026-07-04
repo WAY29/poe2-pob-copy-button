@@ -28,22 +28,14 @@ export const createPobCopyButtonManager = ({
     button.disabled = true;
 
     try {
-      console.log("[PoB-Copy btn] copying item:", itemId);
       const item = itemCache.get(itemId);
-      if (!item) {
-        console.warn("[PoB-Copy btn] cache MISS for:", itemId, "cache size:", itemCache._size ? "unknown" : "see cache logs");
-        throw new Error("Item not in cache");
-      }
       const text = textBuilder.buildPobFullText(item);
       if (!text) {
-        console.warn("[PoB-Copy btn] buildPobFullText returned empty for:", itemId);
         throw new Error("No valid mod lines");
       }
-      console.log("[PoB-Copy btn] text built, length:", text.length);
       await clipboard.copy(text);
       setButtonStatus(button, "ok");
     } catch (error) {
-      console.error("[PoB-Copy btn] copy failed:", error);
       setButtonStatus(button, "error");
     } finally {
       button._pobResetTimer = window.setTimeout(() => {
