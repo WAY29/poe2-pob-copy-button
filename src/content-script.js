@@ -53,7 +53,12 @@ import { createPobCopyButtonManager } from "./content/PobCopyButtonManager.js";
     const data = event.data;
     if (!data || data.source !== MESSAGE_SOURCE) return;
     if (typeof data.url !== "string") return;
-    log("received API message:", data.url, "body:", typeof data.body === "string" ? "present" : "absent");
+    log(
+      "received API message:",
+      data.url,
+      "body:",
+      typeof data.body === "string" ? "present" : "absent"
+    );
     englishFetchClient.handleApiMessage(
       data.url,
       typeof data.body === "string" ? data.body : null
