@@ -61,13 +61,14 @@ export const createEnglishFetchClient = ({ itemCache, englishOrigins }) => {
               const data = JSON.parse(response.body);
               itemCache.storeResults(data);
             } catch (error) {
-              // Ignore parse errors.
+              console.error("[PoB-Copy fetch] re-fetch parse error:", error);
             }
           }
           inFlightEnglishFetches.delete(englishUrl);
         }
       );
     } catch (error) {
+      console.error("[PoB-Copy fetch] sendMessage error:", error);
       inFlightEnglishFetches.delete(englishUrl);
     }
   };
@@ -77,20 +78,25 @@ export const createEnglishFetchClient = ({ itemCache, englishOrigins }) => {
     try {
       parsedUrl = new URL(url, window.location.href);
     } catch (error) {
+      console.error("[PoB-Copy fetch] URL parse error:", error);
       return;
     }
     const englishOrigin = isEnglishOrigin(parsedUrl.origin);
+    console.log("[PoB-Copy fetch] handleApiMessage:", "origin:", parsedUrl.origin, "isEnglish:", englishOrigin, "hasBody:", !!bodyText);
     if (bodyText && englishOrigin) {
       try {
         const data = JSON.parse(bodyText);
         itemCache.storeResults(data);
+        console.log("[PoB-Copy fetch] cached from English origin, items:", data?.result?.length);
       } catch (error) {
-        // Ignore parse errors.
+        console.error("[PoB-Copy fetch] parse error:", error);
       }
     }
     if (!englishOrigin) {
+      console.log("[PoB-Copy fetch] non-English origin, triggering re-fetch");
       fetchEnglishData(parsedUrl.toString());
     } else if (!bodyText) {
+      console.log("[PoB-Copy fetch] English origin but no body, re-fetching");
       fetchEnglishData(parsedUrl.toString());
     }
   };

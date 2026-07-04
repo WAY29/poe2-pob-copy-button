@@ -23,7 +23,9 @@
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!message || message.type !== "fetch-english") return;
     const englishUrl = normalizeEnglishUrl(message.url);
+    console.log("[PoB-Copy bg] fetch-english request:", message.url, "→", englishUrl);
     if (!englishUrl) {
+      console.error("[PoB-Copy bg] invalid URL, aborting");
       sendResponse({ ok: false, error: "invalid_url" });
       return;
     }
@@ -35,9 +37,11 @@
         return response.text();
       })
       .then((body) => {
+        console.log("[PoB-Copy bg] fetch OK, body length:", body.length);
         sendResponse({ ok: true, body });
       })
       .catch((error) => {
+        console.error("[PoB-Copy bg] fetch error:", error);
         sendResponse({ ok: false, error: String(error) });
       });
     return true;

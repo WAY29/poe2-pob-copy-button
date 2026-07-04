@@ -33,14 +33,24 @@ export const createItemTextBuilder = (sourceSets) => {
     return null;
   };
 
+  const extractModText = (mod) => {
+    // mod can be a string (old API) or object with .description (new API)
+    if (typeof mod === "string") return mod;
+    if (mod && typeof mod === "object" && typeof mod.description === "string") {
+      // Clean [StatId|DisplayName] → DisplayName
+      return mod.description.replace(/\[[^\|]+\|([^\]]+)\]/g, "$1");
+    }
+    return "";
+  };
+
   const buildModLines = (item) => {
     if (!item) return [];
     const lines = [];
     for (const source of sourceSets) {
       const mods = item[source.key];
       if (!Array.isArray(mods)) continue;
-      for (let line of mods) {
-        line = normalizeLine(line);
+      for (const mod of mods) {
+        let line = normalizeLine(extractModText(mod));
         if (!line) continue;
         if (line.includes("#")) continue;
         if (source.tag) {
