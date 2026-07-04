@@ -1,10 +1,13 @@
 (() => {
+  const DEBUG = false;
+  const log = DEBUG ? console.log.bind(console, "[PoB-Copy hook]") : () => {};
   const MESSAGE_SOURCE = "pob-copy";
 
   const emit = (url, body) => {
     try {
       if (!url || typeof url !== "string") return;
       if (!url.includes("/api/trade2/fetch/")) return;
+      log("intercepted fetch:", url, "body len:", body ? body.length : 0);
       window.postMessage({ source: MESSAGE_SOURCE, url, body }, "*");
     } catch (e) {}
   };

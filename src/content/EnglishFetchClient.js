@@ -1,3 +1,5 @@
+import { log, error } from "./debug.js";
+
 export const createEnglishFetchClient = ({ itemCache, englishOrigins }) => {
   const inFlightEnglishFetches = new Set();
 
@@ -60,8 +62,9 @@ export const createEnglishFetchClient = ({ itemCache, englishOrigins }) => {
             try {
               const data = JSON.parse(response.body);
               itemCache.storeResults(data);
-            } catch (error) {
-              // Ignore parse errors.
+              log("re-fetch OK, items:", data?.result?.length);
+            } catch (e) {
+              error("re-fetch parse error:", e);
             }
           }
           inFlightEnglishFetches.delete(englishUrl);
@@ -84,13 +87,16 @@ export const createEnglishFetchClient = ({ itemCache, englishOrigins }) => {
       try {
         const data = JSON.parse(bodyText);
         itemCache.storeResults(data);
-      } catch (error) {
-        // Ignore parse errors.
+        log("cached from English origin, items:", data?.result?.length);
+      } catch (e) {
+        error("parse error:", e);
       }
     }
     if (!englishOrigin) {
+      log("non-English origin, triggering re-fetch");
       fetchEnglishData(parsedUrl.toString());
     } else if (!bodyText) {
+      log("English origin no body, re-fetching");
       fetchEnglishData(parsedUrl.toString());
     }
   };

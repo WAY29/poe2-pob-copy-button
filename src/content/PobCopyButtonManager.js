@@ -1,3 +1,5 @@
+import { log, warn, error } from "./debug.js";
+
 export const createPobCopyButtonManager = ({
   itemCache,
   textBuilder,
@@ -28,14 +30,22 @@ export const createPobCopyButtonManager = ({
     button.disabled = true;
 
     try {
+      log("copying item:", itemId);
       const item = itemCache.get(itemId);
+      if (!item) {
+        warn("cache MISS for:", itemId);
+        throw new Error("Item not in cache");
+      }
       const text = textBuilder.buildPobFullText(item);
       if (!text) {
+        warn("buildPobFullText returned empty for:", itemId);
         throw new Error("No valid mod lines");
       }
+      log("text built, length:", text.length);
       await clipboard.copy(text);
       setButtonStatus(button, "ok");
-    } catch (error) {
+    } catch (e) {
+      error("copy failed:", e);
       setButtonStatus(button, "error");
     } finally {
       button._pobResetTimer = window.setTimeout(() => {

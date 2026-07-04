@@ -1,4 +1,6 @@
 (() => {
+  const DEBUG = false;
+  const log = DEBUG ? console.log.bind(console, "[PoB-Copy bg]") : () => {};
   const ENGLISH_ORIGINS = new Set([
     "https://pathofexile.com",
     "https://www.pathofexile.com",
@@ -23,6 +25,7 @@
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!message || message.type !== "fetch-english") return;
     const englishUrl = normalizeEnglishUrl(message.url);
+    log("fetch-english:", message.url, "→", englishUrl);
     if (!englishUrl) {
       sendResponse({ ok: false, error: "invalid_url" });
       return;
@@ -35,10 +38,12 @@
         return response.text();
       })
       .then((body) => {
+        log("fetch OK, body len:", body.length);
         sendResponse({ ok: true, body });
       })
-      .catch((error) => {
-        sendResponse({ ok: false, error: String(error) });
+      .catch((e) => {
+        console.error("[PoB-Copy bg] fetch error:", e);
+        sendResponse({ ok: false, error: String(e) });
       });
     return true;
   });

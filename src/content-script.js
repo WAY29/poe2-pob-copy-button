@@ -1,3 +1,4 @@
+import { log } from "./content/debug.js";
 import { createClipboardService } from "./content/ClipboardService.js";
 import { createEnglishFetchClient } from "./content/EnglishFetchClient.js";
 import { injectApiHook } from "./content/injectApiHook.js";
@@ -52,6 +53,7 @@ import { createPobCopyButtonManager } from "./content/PobCopyButtonManager.js";
     const data = event.data;
     if (!data || data.source !== MESSAGE_SOURCE) return;
     if (typeof data.url !== "string") return;
+    log("received API message:", data.url, "body:", typeof data.body === "string" ? "present" : "absent");
     englishFetchClient.handleApiMessage(
       data.url,
       typeof data.body === "string" ? data.body : null
