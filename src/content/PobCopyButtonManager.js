@@ -56,10 +56,15 @@ export const createPobCopyButtonManager = ({
     }
   };
 
+  const hasButton = (row) => {
+    const left = row.querySelector(".left");
+    return left && left.querySelector(`.${buttonClass}`);
+  };
+
   const injectButton = (row) => {
     const left = row.querySelector(".left");
     if (!left) return;
-    if (left.querySelector(`.${buttonClass}`)) return;
+    if (hasButton(row)) return;
 
     const button = document.createElement("button");
     button.type = "button";
@@ -75,13 +80,11 @@ export const createPobCopyButtonManager = ({
     } else {
       left.insertBefore(button, left.firstChild);
     }
-    row.setAttribute(processedAttr, "true");
+    row.removeAttribute(processedAttr);
   };
 
   const scanAndInject = (root = document) => {
-    const rows = root.querySelectorAll(
-      `div.row[data-id]:not([${processedAttr}])`
-    );
+    const rows = root.querySelectorAll("div.row[data-id]");
     rows.forEach((row) => injectButton(row));
   };
 
@@ -101,6 +104,8 @@ export const createPobCopyButtonManager = ({
   const start = () => {
     scanAndInject();
     observer.observe(document.body, { childList: true, subtree: true });
+    // fallback rescan for SPA re-renders that don't trigger addedNodes
+    setInterval(scanAndInject, 2000);
   };
 
   return { start };
